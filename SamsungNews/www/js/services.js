@@ -1,78 +1,94 @@
 angular.module('starter.services', [])
 
-.factory('Chats', function( $http) {
-  // console.log('ApiEndpoint', ApiEndpoint);
-  // Might use a resource here that returns a JSON array
-  var newsParams = {'paged':'1', 'orderby': 'date', 'action': 'post_lists', 'posttype': 'post', 'postperpage': '10', 'from': 'main'};
-  var news = {};
-  
-  $http({
-    method:"POST",
-    url:"http://samsung-news-merey90.c9users.io/admin-ajax.php",
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'}, 
-  transformRequest: function(obj) {
-      var str = [];
-      for(var p in obj)
-      str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-      return str.join("&");
-  },
-  data: newsParams    
-  }).success(function(data){
-    news = data;
-    if(news.code==00){
-      console.log(news.message);
-    }
-      
-  });
-
-  
-    
-  var chats = [{
-    id: 0,
-    name: 'Ben Sparrow',
-    lastText: 'You on your way?',
-    face: 'img/ben.png'
-  }, {
-    id: 1,
-    name: 'Max Lynx',
-    lastText: 'Hey, it\'s me',
-    face: 'img/max.png'
-  }, {
-    id: 2,
-    name: 'Adam Bradleyson',
-    lastText: 'I should buy a boat',
-    face: 'img/adam.jpg'
-  }, {
-    id: 3,
-    name: 'Perry Governor',
-    lastText: 'Look at my mukluks!',
-    face: 'img/perry.png'
-  }, {
-    id: 4,
-    name: 'Mike Harrington',
-    lastText: 'This is wicked good ice cream.',
-    face: 'img/mike.png'
-  }];
-
+.factory('Categories', function( $http) {
+  var categories = [
+    {'slug':'press-release', 'name':'Press Release','subscribe':true},
+    {'slug':'technology', 'name':'Technology', 'subscribe':true},
+    {'slug':'tv-audio', 'name':'TV & Audio', 'subscribe':true},
+    {'slug':'corporateothers', 'name':'Corporate Others', 'subscribe':true}
+  ];
   return {
     all: function() {
-      return chats;
+      return categories;
     },
-    remove: function(chat) {
-      chats.splice(chats.indexOf(chat), 1);
+    subscribe: function(category) {
+      for (var i = 0; i < categories.length; i++) {
+        if (categories[i].title === category) {
+          categories[i].subscribe = true;
+          return categories[i];
+        }
+      }
     },
-    get: function(chatId) {
-      for (var i = 0; i < chats.length; i++) {
-        if (chats[i].id === parseInt(chatId)) {
-          return chats[i];
+    unsubscribe: function(category) {
+      for (var i = 0; i < categories.length; i++) {
+        if (categories[i].title === category) {
+          categories[i].subscribe = false;
+          return categories[i];
+        }
+      }
+    },
+    get: function(category) {
+      for (var i = 0; i < categories.length; i++) {
+        if (categories[i].title === category) {
+          return categories[i];
         }
       }
       return null;
     }
   };
+})
+.factory('Newsletters', function($http) {
+  var newsParams = {'paged':'1', 'orderby': 'date', 'action': 'post_lists', 'posttype': 'post', 'postperpage': '10', 'from': 'main'};
+  var news = [];
+  
+  
+  var myService = {
+    async: function() {
+      
+        // $http returns a promise, which has a then function, which also returns a promise
+        var promise = $http({
+          method:"POST",
+          url:"http://samsung-news-merey90.c9users.io/admin-ajax.php",
+          headers: {'Content-Type': 'application/x-www-form-urlencoded'}, 
+          transformRequest: function(obj) {
+            var str = [];
+            for(var p in obj)
+            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+            return str.join("&");
+          },
+          data: newsParams    
+        }).then(function (response) {
+          // The return value gets picked up by the then in the controller.
+          news = response.data.content.list;
+          return response.data.content.list;
+        });
+      
+      // Return the promise to the controller
+      return promise;
+    }
+  };
+  
+  return {
+    all: function() {
+      return myService;
+    },
+    get: function(newsletterId) {
+      console.log(news+" "+newsletterId);
+      for (var i = 0; i < news.length; i++) {
+        if (news[i].post_info.ID === parseInt(newsletterId)) {
+          return news[i];
+        }
+      }
+      return null;
+    },
+    bycat: function(category){
+      var bycat = [];
+      for (var i = 0; i < news.length; i++) {
+        if (news[i].category_info.slug === category) {
+          bycat.push(news[i]);
+        }
+      }
+      return bycat;
+    }
+  };
 });
-
-// angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
-// .constant('ApiEndpoint', {
-//   url: 'http://samsung-news-merey90.c9users.io/admin-ajax.php'
-// })

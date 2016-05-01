@@ -32,7 +32,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   $stateProvider
 
   // setup an abstract state for the tabs directive
-    .state('tab', {
+  .state('tab', {
     url: '/tab',
     abstract: true,
     templateUrl: 'templates/tabs.html'
@@ -40,31 +40,40 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
   // Each tab has its own nav history stack:
 
-  .state('tab.dash', {
-    url: '/dash',
+  .state('tab.categories', {
+    url: '/categories',
     views: {
-      'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
-        controller: 'DashCtrl'
+      'tab-categories': {
+        templateUrl: 'templates/tab-categories.html',
+        controller: 'CategoriesCtrl'
       }
     }
   })
 
-  .state('tab.chats', {
-      url: '/chats',
+  .state('tab.newsletters', {
+      url: '/newsletters',
       views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-chats.html',
-          controller: 'ChatsCtrl'
+        'tab-newsletters': {
+          templateUrl: 'templates/tab-newsletters.html',
+          controller: 'NewslettersCtrl'
         }
       }
     })
-    .state('tab.chat-detail', {
-      url: '/chats/:chatId',
+    .state('tab.newsletter', {
+      url: '/newsletters/:newsletterId',
       views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
+        'tab-newsletters': {
+          templateUrl: 'templates/newsletter.html',
+          controller: 'NewsletterCtrl'
+        }
+      }
+    })
+    .state('tab.newsletterbycat', {
+      url: '/newsletters/bycat/:category',
+      views: {
+        'tab-newsletters': {
+          templateUrl: 'templates/tab-newsletters.html',
+          controller: 'NewsletterBycatCtrl'
         }
       }
     })
@@ -80,6 +89,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/dash');
+  $urlRouterProvider.otherwise('/tab/newsletters');
 
 });
