@@ -48,7 +48,7 @@ angular.module('starter.services', [])
         // $http returns a promise, which has a then function, which also returns a promise
         var promise = $http({
           method:"POST",
-          url:"http://samsung-news-merey90.c9users.io/admin-ajax.php",
+          url:"http://news.samsung.com/global/wp-admin/admin-ajax.php",
           headers: {'Content-Type': 'application/x-www-form-urlencoded'}, 
           transformRequest: function(obj) {
             var str = [];

@@ -1,0 +1,6 @@
+"proxies": [
+    {
+      "path": "/admin-ajax.php",
+      "proxyUrl": "http://news.samsung.com/global/wp-admin/admin-ajax.php"
+    }
+  ]
