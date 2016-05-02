@@ -1,4 +1,5 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['ionic','ionic.service.core',
+                            'ionic.service.push'])
 
 .controller('CategoriesCtrl', function($scope, Categories) {
   $scope.categories = Categories.all();
@@ -27,6 +28,16 @@ angular.module('starter.controllers', [])
 .controller('AccountCtrl', function($scope) {
   $scope.settings = {
     enableNotify: true,
-    enableCountry: true
+    enableCountry: true,
+    token: null
   };
+  if($scope.settings.enableNotify == true){
+    var push = new Ionic.Push({});
+
+    push.register(function(token) {
+      // Log out your device token (Save this!)
+      $scope.settings.token = token,token;
+      console.log("Got Token:",token.token);
+    });
+  }
 });
